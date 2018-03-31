@@ -9,11 +9,13 @@ namespace SportsStore.Controllers
 {
     public class ProductController : Controller
     {
-        private IProductRepository repository;
+        private IProductRepository repo;
+        public int PageSize = 4;
         public ProductController(IProductRepository repo)
         {
-            repository = repo;
+            this.repo = repo;
         }
-        public ViewResult List() => View(repository.Products);
+        public ViewResult List(int page=1) 
+            => View(repo.Products.OrderBy(p => p.ProductID).Skip((page-1)*PageSize).Take(PageSize));
     }
 }
