@@ -38,7 +38,7 @@ namespace SportsStore
             {
                 routes.MapRoute(
                     name:"pagination",
-                    template: "Products/Page{productPage}",
+                    template: "Products/Page{page}",
                     defaults: new {Controller="Product", action="List"}
                 );
                 routes.MapRoute(
