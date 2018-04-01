@@ -16,20 +16,24 @@ namespace SportsStore.Controllers
         {
             this.repo = repo;
         }
-        public ViewResult List(int page=1)
+        public ViewResult List(string category, int productPage=1)
         {
-            IEnumerable<Product> products = repo.Products.OrderBy(p => p.ProductID).Skip((page - 1) * PageSize).Take(PageSize);
+            IEnumerable<Product> products = repo.Products
+                .Where(p => category==null || p.Category==category)
+                .OrderBy(p => p.ProductID)
+                .Skip((productPage - 1) * PageSize)
+                .Take(PageSize);
             PagingInfo pagingInfo = new PagingInfo
             {
-                CurrentPage = page,
+                CurrentPage = productPage,
                 ItemsPerPage = PageSize,
-                TotalItems = repo.Products.Count()
-
+                TotalItems = category == null ? repo.Products.Count() : repo.Products.Where(p => p.Category == category).Count()
             };
             ProductListViewModel viewModel = new ProductListViewModel
             {
                 Products = products,
-                PagingInfo = pagingInfo
+                PagingInfo = pagingInfo,
+                CurrentCategory=category
             };
             return View(viewModel);
         }
