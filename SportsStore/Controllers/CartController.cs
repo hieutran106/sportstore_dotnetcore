@@ -13,9 +13,11 @@ namespace SportsStore.Controllers
     {
 
         private IProductRepository repo;
-        public CartController(IProductRepository repo)
+        private Cart cart;
+        public CartController(IProductRepository repo, Cart cartService)
         {
             this.repo = repo;
+            this.cart = cartService;
         }
         public ViewResult Index(string returnUrl)
             => View(new CartIndexViewModel { Cart = GetCart(), ReturnUrl = returnUrl });
@@ -41,15 +43,6 @@ namespace SportsStore.Controllers
                 SaveCart(cart);
             }
             return RedirectToAction("Index", new { returnUrl });
-        }
-        private Cart GetCart()
-        {
-            Cart cart = HttpContext.Session.GetJson<Cart>("Cart") ?? new Cart();
-            return cart;
-        }
-        private void SaveCart(Cart cart)
-        {
-            HttpContext.Session.SetJson("Cart", cart);
         }
     }
 }
